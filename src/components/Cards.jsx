@@ -2,7 +2,7 @@ const Cards = ({ title, image, rate, category, price }) => {
     return (
         <main>
             <div className="bg-white rounded p-4" title={title}>
-                <div className="relative">
+                <div className="grid lg:grid-cols-4 md:grid-cols-4 gap-4 ">
                     <img
                         src={image}
                         alt="Imagem de produtos"

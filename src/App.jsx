@@ -7,7 +7,7 @@ import Header from "./components/Header"
 const App = () => {
 
     const [produtos, setProdutos] = useState([]);
-    const [produtosExibidos, setProdutosExibidos] = useState([])
+    const [produtosExibidos, setProdutosFiltrados] = useState([])
     // Foi criado uma constante com userState, o mesmo da memória a um componente
     // para que o valor sobreviva a cada renderização
 
@@ -16,23 +16,51 @@ const App = () => {
             .then((response) => { return response.json() })
             .then((response) => {
                 setProdutos(response);// produtos: lista original da API (nunca é filtrada)
-
-                setProdutosExibidos(response);// produtosExibidos: o que aparece na tela, usado no map()
+                setProdutosFiltrados(response);// produtosExibidos: o que aparece na tela, usado no map()
 
             })
     };
 
     function filtrarProdutos(categoria) {
 
-        if (categoria !== "All") {
+        if (categoria != "All") {
 
             let produtosFiltrados = produtos.filter((produto) => {
-                return produto.category === categoria;
+                return produto.category == categoria;
             });
 
-            setProdutosExibidos(produtosFiltrados);
+            setProdutosFiltrados(produtosFiltrados);
         } else {
-            setProdutosExibidos(produtos);
+            setProdutosFiltrados(produtos);
+        }
+    }
+
+    function ordenacaoProduto(ordem) {
+        let produtoOrdenados = [];
+
+        if (ordem == "preco") {
+            produtoOrdenados = produtos.toSorted((prodA, prodB) => {
+                return prodA.price - prodB.price;
+            });
+        } else {
+            produtoOrdenados = produtos.toSorted((prodA, prodB) => {
+                return prodA.rating.rate - prodB.rating.rate;
+            });
+        }
+        setProdutosFiltrados(produtoOrdenados);
+    }
+
+    function pesquisarProdutos(texto) {
+        if (texto.length == 0) {
+            setProdutosFiltrados(produtos);
+            return;
+        }
+
+        if (texto.length >= 3) {
+            let produtosEncontrados = produtos.filter((produto) => {
+                return produto.title.toLowerCase().includes(texto.toLowerCase());
+            });
+            setProdutosFiltrados(produtosEncontrados);
         }
     }
 
@@ -43,9 +71,12 @@ const App = () => {
 
     return (
         <>
-            <Header filtrarProdutos={filtrarProdutos} />
+            <Header
+                filtrarProdutos={filtrarProdutos}
+                ordenacaoProduto={ordenacaoProduto}
+                pesquisarProdutos={pesquisarProdutos} />
             <main className="p-15 bg-slate-200">
-                <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-4 ">
+                <div className="grid lg:grid-cols-4 md:grid-cols-4 gap-4 ">
                     {
                         produtosExibidos.map((produto) => (
                             <Cards
