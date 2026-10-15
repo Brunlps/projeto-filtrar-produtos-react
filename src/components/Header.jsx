@@ -5,7 +5,7 @@ const Header = ({filtrarProdutos, ordenacaoProduto, pesquisarProdutos}) => {
             <div className="relative w-full lg:w-auto pb-2">
             
                 <input 
-               onChange={(event) => pesquisarProdutos(event.target.value)}
+               onChange={(event)=> pesquisarProdutos(event.target.value)}
                 type="text" 
                 placeholder="Buscar Produtos" 
                 className="w-full lg:w-120 h-10 rounded bg-white px-4 " 
