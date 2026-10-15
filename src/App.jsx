@@ -7,44 +7,49 @@ import Header from "./components/Header"
 const App = () => {
 
     const [produtos, setProdutos] = useState([]);
+    const [produtosExibidos, setProdutosExibidos] = useState([])
+    // Foi criado uma constante com userState, o mesmo da memória a um componente
+    // para que o valor sobreviva a cada renderização
 
-    function buscarProdutos([]) {
+    function buscarProdutos() {
         fetch("https://fakestoreapi.com/products")
             .then((response) => { return response.json() })
             .then((response) => {
-                setProdutos(response)
+                setProdutos(response);// produtos: lista original da API (nunca é filtrada)
+
+                setProdutosExibidos(response);// produtosExibidos: o que aparece na tela, usado no map()
+
             })
+    };
+
+    function filtrarProdutos(categoria) {
+
+        if (categoria !== "All") {
+
+            let produtosFiltrados = produtos.filter((produto) => {
+                return produto.category === categoria;
+            });
+
+            setProdutosExibidos(produtosFiltrados);
+        } else {
+            setProdutosExibidos(produtos);
+        }
     }
 
     useEffect(() => {
         buscarProdutos();
-
-    }, [])
-
-    function filtrarProdutos(categoria) {
-
-        if (categoria != "All") {
-
-            let produtosFiltrados = produtos.filter((produto) => {
-                return produto.category == categoria;
-            });
-
-            carregarProdutos(produtosFiltrados);
-        } else {
-            carregarProdutos(produtos);
-        }
-    }
+    }, []);
 
 
     return (
         <>
-            <Header />
-            <main>
-                <div id="cards" className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-4 ">
+            <Header filtrarProdutos={filtrarProdutos} />
+            <main className="p-15 bg-slate-200">
+                <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-4 ">
                     {
-                        produtos.map((produto) => (
+                        produtosExibidos.map((produto) => (
                             <Cards
-                            // Props 
+                                // Props 
                                 key={produto.id}
                                 title={produto.title}
                                 image={produto.image}
