@@ -61,6 +61,7 @@ const App = () => {
                 return produto.title.toLowerCase().includes(texto.toLowerCase());
             });
             setProdutosFiltrados(produtosEncontrados);
+
         }
     }
 
@@ -76,7 +77,7 @@ const App = () => {
                 ordenacaoProduto={ordenacaoProduto}
                 pesquisarProdutos={pesquisarProdutos} />
             <main className="p-15 bg-slate-200">
-                <div className="grid lg:grid-cols-4 md:grid-cols-4 gap-4 ">
+                <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-4 ">
                     {
                         produtosExibidos.map((produto) => (
                             <Cards
